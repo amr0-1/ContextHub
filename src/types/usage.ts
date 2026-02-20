@@ -5,7 +5,20 @@ import type { Model } from './models';
 export interface UsageMetadata {
   totalInputTokens: number;
   totalOutputTokens: number;
+  totalUsedTokens: number;
+  remainingTokens: number;
   contextLimit: number;
+}
+
+/** Context window health level */
+export type ContextLevel = 'safe' | 'caution' | 'critical';
+
+/** Derived context window status */
+export interface ContextStatus {
+  used: number;
+  remaining: number;
+  percent: number;
+  level: ContextLevel;
 }
 
 /** A full conversation */

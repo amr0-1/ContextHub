@@ -19,8 +19,12 @@ export default function MessageList({ messages, isLoading }: MessageListProps) {
   if (messages.length === 0 && !isLoading) {
     return (
       <div className={styles.empty}>
-        <div className={styles.emptyIcon}>✦</div>
-        <h2 className={styles.emptyTitle}>Nexus AI</h2>
+        <img
+          className={styles.emptyLogo}
+          src="/logo.png"
+          alt="ContextHub AI logo"
+        />
+        <h2 className={styles.emptyTitle}>ContextHub AI</h2>
         <p className={styles.emptySubtitle}>
           Start a conversation — your context window usage is tracked in real time.
         </p>
@@ -42,10 +46,10 @@ export default function MessageList({ messages, isLoading }: MessageListProps) {
           <div className={styles.body}>
             <div className={styles.meta}>
               <span className={styles.role}>
-                {msg.role === 'user' ? 'You' : 'Nexus AI'}
+                {msg.role === 'user' ? 'You' : 'ContextHub AI'}
               </span>
               <span className={styles.time}>{formatTime(msg.timestamp)}</span>
-              <span className={styles.tokens}>{msg.tokenCount} tokens</span>
+              <span className={styles.tokens}>{msg.tokenCount ?? 0} tokens</span>
             </div>
             <div className={styles.content}>{msg.content}</div>
           </div>
@@ -57,7 +61,7 @@ export default function MessageList({ messages, isLoading }: MessageListProps) {
           <div className={styles.avatar}>✦</div>
           <div className={styles.body}>
             <div className={styles.meta}>
-              <span className={styles.role}>Nexus AI</span>
+              <span className={styles.role}>ContextHub AI</span>
             </div>
             <div className={styles.typing}>
               <span />

@@ -6,6 +6,6 @@ export interface Message {
   id: string;
   role: Role;
   content: string;
-  tokenCount: number;
+  tokenCount?: number;
   timestamp: number;
 }

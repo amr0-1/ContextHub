@@ -1,7 +1,7 @@
-import { useState, useRef, type KeyboardEvent, type ChangeEvent } from 'react';
+import { useState, useRef, useEffect, type KeyboardEvent, type ChangeEvent } from 'react';
 import { useConversation } from '../../context/ConversationContext';
-import { AVAILABLE_MODELS } from '../../types/models';
-import type { Model } from '../../types/models';
+import { countMessageTokens } from '../../services/token_engine';
+import { formatNumber } from '../../utils/formatting';
 import styles from './MessageInput.module.css';
 
 interface MessageInputProps {
@@ -11,10 +11,23 @@ interface MessageInputProps {
 
 export default function MessageInput({ onSend, disabled }: MessageInputProps) {
   const [value, setValue] = useState('');
+  const [draftTokens, setDraftTokens] = useState(0);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const { state, dispatch } = useConversation();
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const { models } = useConversation();
 
-  const currentModel = state.conversation.model;
+  // Debounced live token counting (150ms)
+  useEffect(() => {
+    clearTimeout(debounceRef.current);
+    if (!value.trim()) {
+      setDraftTokens(0);
+      return;
+    }
+    debounceRef.current = setTimeout(() => {
+      setDraftTokens(countMessageTokens(value, models.active.tokenizer));
+    }, 150);
+    return () => clearTimeout(debounceRef.current);
+  }, [value, models.active.tokenizer]);
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setValue(e.target.value);
@@ -29,6 +42,7 @@ export default function MessageInput({ onSend, disabled }: MessageInputProps) {
     if (!trimmed || disabled) return;
     onSend(trimmed);
     setValue('');
+    setDraftTokens(0);
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
     }
@@ -41,11 +55,6 @@ export default function MessageInput({ onSend, disabled }: MessageInputProps) {
     }
   };
 
-  const handleModelChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const model = AVAILABLE_MODELS.find((m) => m.id === e.target.value) as Model;
-    dispatch({ type: 'SET_MODEL', payload: model });
-  };
-
   return (
     <div className={styles.wrapper}>
       <div className={styles.inputRow}>
@@ -55,7 +64,7 @@ export default function MessageInput({ onSend, disabled }: MessageInputProps) {
           value={value}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
-          placeholder="Message Nexus AI…"
+          placeholder="Message ContextHub AI…"
           rows={1}
           disabled={disabled}
         />
@@ -74,18 +83,11 @@ export default function MessageInput({ onSend, disabled }: MessageInputProps) {
       </div>
 
       <div className={styles.toolbar}>
-        <select
-          className={styles.modelSelect}
-          value={currentModel.id}
-          onChange={handleModelChange}
-        >
-          {AVAILABLE_MODELS.map((m) => (
-            <option key={m.id} value={m.id}>
-              {m.name} — {m.provider}
-            </option>
-          ))}
-        </select>
-
+        {draftTokens > 0 && (
+          <span className={styles.liveCounter}>
+            ~{formatNumber(draftTokens)} tokens
+          </span>
+        )}
         <span className={styles.hint}>
           <kbd>Enter</kbd> to send · <kbd>Shift + Enter</kbd> for new line
         </span>

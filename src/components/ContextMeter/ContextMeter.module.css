@@ -63,18 +63,18 @@
 }
 
 /* Severity colours */
-.healthy {
+.safe {
   color: var(--green);
 }
-.barFill.healthy {
+.barFill.safe {
   background: linear-gradient(90deg, var(--green), var(--green-bright));
   box-shadow: 0 0 8px color-mix(in srgb, var(--green) 40%, transparent);
 }
 
-.warning {
+.caution {
   color: var(--amber);
 }
-.barFill.warning {
+.barFill.caution {
   background: linear-gradient(90deg, var(--amber), var(--amber-bright));
   box-shadow: 0 0 8px color-mix(in srgb, var(--amber) 40%, transparent);
 }

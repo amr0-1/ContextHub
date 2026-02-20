@@ -27,13 +27,11 @@
   opacity: 0;
   animation: fadeIn 0.6s ease forwards;
 }
-.emptyIcon {
-  font-size: 3rem;
-  background: var(--gradient-brand);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 24px color-mix(in srgb, var(--accent) 30%, transparent));
+.emptyLogo {
+  width: 4rem;
+  height: 4rem;
+  object-fit: contain;
+  filter: drop-shadow(0 0 18px color-mix(in srgb, var(--accent) 25%, transparent));
 }
 .emptyTitle {
   font-size: 1.5rem;

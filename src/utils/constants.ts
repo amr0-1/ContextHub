@@ -1,6 +1,6 @@
 /** App-wide constants */
 
-export const APP_NAME = 'Nexus AI';
+export const APP_NAME = 'ContextHub AI';
 export const APP_VERSION = '0.1.0';
 
 /** Default context window limit (tokens) */

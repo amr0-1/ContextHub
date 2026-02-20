@@ -4,9 +4,10 @@ Note: _This is purely the output of the chat conversation and does not contain a
 
 ### User Input
 
-Act as a Senior Software Engineer. Initialize a new React + Vite + TypeScript project for "Nexus AI"—a professiona
+Act as a Senior Software Engineer. Initialize a new React + Vite + TypeScript project for "ContextHub AI"—a professiona
       AI client focused on context window transparency.
-  Objective: Execute Phase 1 (Core Architecture) with the following requirements:
+  
+Objective: Execute Phase 1 (Core Architecture) with the following requirements:
   
   1. Project Scaffold: Setup a clean directory structure:
      - src/components (UI parts: Chat, Sidebar, ContextMeter)

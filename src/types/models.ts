@@ -1,41 +1,26 @@
-/** AI Model definition */
+// Provider types
+export type ModelProvider = "OpenAI" | "Google" | "Anthropic" | "Meta";
+
+// Tokenizer types
+export type TokenizerType = "cl100k_base" | "o200k_base" | "gemini" | "claude";
+
+export interface ModelPricing {
+  input: number; // Cost per 1M tokens
+  output: number; // Cost per 1M tokens
+}
+
 export interface Model {
   id: string;
   name: string;
-  provider: string;
+  provider: ModelProvider;
   contextWindow: number;
+  tokenizer: TokenizerType;
+  pricing: ModelPricing;
+  description?: string;
+  isExperimental?: boolean;
 }
 
-/** Available models */
-export const AVAILABLE_MODELS: Model[] = [
-  {
-    id: 'gpt-4o',
-    name: 'GPT-4o',
-    provider: 'OpenAI',
-    contextWindow: 128_000,
-  },
-  {
-    id: 'gpt-4o-mini',
-    name: 'GPT-4o Mini',
-    provider: 'OpenAI',
-    contextWindow: 128_000,
-  },
-  {
-    id: 'claude-3.5-sonnet',
-    name: 'Claude 3.5 Sonnet',
-    provider: 'Anthropic',
-    contextWindow: 200_000,
-  },
-  {
-    id: 'gemini-2.0-flash',
-    name: 'Gemini 2.0 Flash',
-    provider: 'Google',
-    contextWindow: 1_000_000,
-  },
-  {
-    id: 'llama-3.1-70b',
-    name: 'Llama 3.1 70B',
-    provider: 'Meta',
-    contextWindow: 128_000,
-  },
-];
+export interface ModelConfig {
+  default: string;
+  models: Record<string, Model>;
+}

@@ -89,6 +89,7 @@
 .hint {
   font-size: 0.65rem;
   color: var(--text-tertiary);
+  margin-left: auto;
 }
 .hint kbd {
   background: var(--surface-inset);
@@ -97,4 +98,16 @@
   padding: 0 0.25rem;
   font-family: inherit;
   font-size: 0.6rem;
+}
+
+/* ── Live token counter ──────────────────────────── */
+.liveCounter {
+  font-size: 0.65rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  padding: 0.125rem 0.45rem;
+  border-radius: 4px;
+  white-space: nowrap;
 }

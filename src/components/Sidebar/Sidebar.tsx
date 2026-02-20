@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useConversation } from '../../context/ConversationContext';
 import styles from './Sidebar.module.css';
+import ModelSelector from '../ModelSelector/ModelSelector';
 
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
@@ -12,8 +13,12 @@ export default function Sidebar() {
       <div className={styles.header}>
         {!collapsed && (
           <div className={styles.brand}>
-            <span className={styles.logo}>✦</span>
-            <span className={styles.brandName}>Nexus AI</span>
+            <img
+              src="/logo.png"
+              alt="ContextHub AI logo"
+              className={styles.logoImg}
+            />
+            <span className={styles.brandName}>ContextHub AI</span>
           </div>
         )}
         <button
@@ -24,6 +29,9 @@ export default function Sidebar() {
           {collapsed ? '▸' : '◂'}
         </button>
       </div>
+
+      {/* Model Selector */}
+      {!collapsed && <ModelSelector />}
 
       {/* New chat */}
       <button
