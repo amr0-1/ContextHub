@@ -1,0 +1,88 @@
+.meter {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.625rem 1.25rem;
+  background: var(--surface-elevated);
+  border-bottom: 1px solid var(--border);
+  min-height: 3rem;
+}
+
+/* Stats row */
+.stats {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.125rem;
+}
+
+.label {
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+}
+
+.value {
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+/* Progress bar */
+.barTrack {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--surface-inset);
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  border-radius: 3px;
+  transition:
+    width 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.4s ease;
+}
+
+/* Percentage badge */
+.percent {
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  min-width: 3rem;
+  text-align: right;
+}
+
+/* Severity colours */
+.healthy {
+  color: var(--green);
+}
+.barFill.healthy {
+  background: linear-gradient(90deg, var(--green), var(--green-bright));
+  box-shadow: 0 0 8px color-mix(in srgb, var(--green) 40%, transparent);
+}
+
+.warning {
+  color: var(--amber);
+}
+.barFill.warning {
+  background: linear-gradient(90deg, var(--amber), var(--amber-bright));
+  box-shadow: 0 0 8px color-mix(in srgb, var(--amber) 40%, transparent);
+}
+
+.critical {
+  color: var(--red);
+}
+.barFill.critical {
+  background: linear-gradient(90deg, var(--red), var(--red-bright));
+  box-shadow: 0 0 8px color-mix(in srgb, var(--red) 40%, transparent);
+}
