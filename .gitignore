@@ -24,3 +24,9 @@ dist-ssr
 *.sw?
 
 prompts-and-phases/
+
+# Phase 9: SQLite database
+server/data/
+
+# Phase 8.5: Server environment secrets — NEVER commit real API keys
+server/.env

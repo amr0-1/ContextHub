@@ -5,7 +5,15 @@ import ModelSelector from '../ModelSelector/ModelSelector';
 
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
-  const { dispatch } = useConversation();
+  const {
+    state,
+    newConversation,
+    loadConversation,
+    removeConversation,
+  } = useConversation();
+
+  const activeId = state.conversation.id;
+  const conversations = state.conversationList;
 
   return (
     <aside className={`${styles.sidebar} ${collapsed ? styles.collapsed : ''}`}>
@@ -36,18 +44,52 @@ export default function Sidebar() {
       {/* New chat */}
       <button
         className={styles.newChatBtn}
-        onClick={() => dispatch({ type: 'CLEAR' })}
+        onClick={() => newConversation()}
       >
         {collapsed ? '+' : '+ New Chat'}
       </button>
 
-      {/* Conversation list placeholder */}
+      {/* Conversation list */}
       {!collapsed && (
         <nav className={styles.nav}>
           <div className={styles.sectionLabel}>Recent</div>
-          <div className={styles.placeholder}>
-            No conversation history yet.
-          </div>
+          {conversations.length === 0 ? (
+            <div className={styles.placeholder}>
+              No conversation history yet.
+            </div>
+          ) : (
+            <ul className={styles.conversationList}>
+              {conversations.map((conv) => (
+                <li
+                  key={conv.id}
+                  className={`${styles.conversationItem} ${
+                    conv.id === activeId ? styles.active : ''
+                  }`}
+                >
+                  <button
+                    className={styles.conversationBtn}
+                    onClick={() => loadConversation(conv.id)}
+                    title={conv.title}
+                  >
+                    <span className={styles.conversationTitle}>
+                      {conv.title}
+                    </span>
+                  </button>
+                  <button
+                    className={styles.deleteBtn}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeConversation(conv.id);
+                    }}
+                    aria-label="Delete conversation"
+                    title="Delete"
+                  >
+                    ✕
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
         </nav>
       )}
 

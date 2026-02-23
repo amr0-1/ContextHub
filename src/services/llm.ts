@@ -1,35 +1,79 @@
 import type { Message } from '../types/messages';
-import type { LLMResponse } from '../types/usage';
+import type { UnifiedResponse } from '../types/usage';
 import type { Model } from '../types/models';
 import { countMessageTokens } from './token_engine';
+
+/* ------------------------------------------------------------------ */
+/*  Backend proxy call                                                  */
+/* ------------------------------------------------------------------ */
+
+/**
+ * POST /api/chat  — sends messages through the secure backend proxy.
+ *
+ * The server reads API keys from its own environment variables; this
+ * function intentionally carries NO API keys.
+ *
+ * Throws an error with `.statusCode` set on non-2xx responses.
+ */
+async function callChatProxy(
+  modelId: string,
+  messages: Message[],
+): Promise<UnifiedResponse> {
+  const res = await fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ modelId, messages }),
+  });
+
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({})) as { error?: string };
+    const err = new Error(body.error ?? `Chat proxy error ${res.status}`);
+    (err as Error & { statusCode: number }).statusCode = res.status;
+    throw err;
+  }
+
+  return res.json() as Promise<UnifiedResponse>;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Main entry point                                                   */
+/* ------------------------------------------------------------------ */
 
 /**
  * Send messages to an LLM and get a unified response.
  *
- * Currently returns a mock response; swap the body out
- * for a real fetch call when wiring up a live provider.
+ * Routes through the secure backend proxy (Phase 8.5).
+ * Falls back to a local mock response when:
+ *  - The server returns 503 (no API key configured), OR
+ *  - The backend is not reachable (TypeError — local dev without server)
  */
 export async function sendMessage(
   messages: Message[],
   model: Model,
-): Promise<LLMResponse> {
-  // Simulate network latency
+): Promise<UnifiedResponse> {
+  try {
+    return await callChatProxy(model.id, messages);
+  } catch (err) {
+    const statusCode = (err as Error & { statusCode?: number }).statusCode;
+    // 503 = server running but no key configured; TypeError = server not running
+    const useMock = statusCode === 503 || err instanceof TypeError;
+    if (!useMock) throw err; // real API error (401, 429, 502, …) — surface to UI
+  }
+
+  // ── Mock fallback for development ──────────────────────────────
   await new Promise((resolve) => setTimeout(resolve, 800 + Math.random() * 700));
 
   const lastUserMsg = [...messages].reverse().find((m) => m.role === 'user');
-
   const mockContent = generateMockReply(lastUserMsg?.content ?? '');
-  const inputTokens = messages.reduce((sum, m) => sum + (m.tokenCount ?? 0), 0);
-  const outputTokens = countMessageTokens(mockContent, model.tokenizer);
-
-  // keep TS happy — model is used for routing in a real impl
-  void model;
+  const promptTokens = messages.reduce((sum, m) => sum + (m.tokenCount ?? 0), 0);
+  const completionTokens = countMessageTokens(mockContent, model.tokenizer);
 
   return {
-    content: mockContent,
+    reply: mockContent,
     usage: {
-      inputTokens,
-      outputTokens,
+      promptTokens,
+      completionTokens,
+      totalTokens: promptTokens + completionTokens,
     },
   };
 }

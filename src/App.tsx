@@ -1,6 +1,7 @@
 import { ConversationProvider } from './context/ConversationContext';
 import Sidebar from './components/Sidebar/Sidebar';
 import ContextDashboard from './components/ContextDashboard/ContextDashboard';
+import OverflowBanner from './components/OverflowBanner/OverflowBanner';
 import MessageList from './components/Chat/MessageList';
 import MessageInput from './components/Chat/MessageInput';
 import { useChat } from './hooks/useChat';
@@ -12,6 +13,7 @@ function ChatArea() {
   return (
     <main className={styles.main}>
       <ContextDashboard />
+      <OverflowBanner />
       <MessageList messages={messages} isLoading={isLoading} />
       <MessageInput onSend={sendMessage} disabled={isLoading} />
     </main>

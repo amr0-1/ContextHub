@@ -32,11 +32,21 @@ export interface Conversation {
   updatedAt: number;
 }
 
-/** Unified LLM response */
+/** Unified LLM response (legacy — retained for backward compatibility) */
 export interface LLMResponse {
   content: string;
   usage: {
     inputTokens: number;
     outputTokens: number;
+  };
+}
+
+/** Standardized provider-agnostic response (Phase 8) */
+export interface UnifiedResponse {
+  reply: string;
+  usage: {
+    promptTokens: number;
+    completionTokens: number;
+    totalTokens: number;
   };
 }
