@@ -11,7 +11,7 @@ export interface UsageMetadata {
 }
 
 /** Context window health level */
-export type ContextLevel = 'safe' | 'caution' | 'critical';
+export type ContextLevel = 'safe' | 'caution' | 'critical' | 'block';
 
 /** Derived context window status */
 export interface ContextStatus {

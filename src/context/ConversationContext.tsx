@@ -10,24 +10,9 @@ import type { Message, Role } from '../types/messages';
 import type { Model } from '../types/models';
 import type { ContextStatus, Conversation } from '../types/usage';
 import { DEFAULT_MODEL_ID, getModel, MODEL_REGISTRY } from '../models/registry';
+import { calculateContextStatus } from '../services/context_monitor';
 import { countMessageTokens } from '../services/token_engine';
-
-/* ------------------------------------------------------------------ */
-/*  Helpers                                                            */
-/* ------------------------------------------------------------------ */
-
-function deriveContextStatus(
-  totalInput: number,
-  totalOutput: number,
-  contextWindow: number,
-): ContextStatus {
-  const used = totalInput + totalOutput;
-  const remaining = Math.max(0, contextWindow - used);
-  const percent = contextWindow > 0 ? (used / contextWindow) * 100 : 0;
-  const level =
-    percent >= 85 ? 'critical' : percent >= 60 ? 'caution' : 'safe';
-  return { used, remaining, percent, level };
-}
+import { CONTEXT_THRESHOLD_BLOCK } from '../utils/constants';
 
 /* ------------------------------------------------------------------ */
 /*  State                                                              */
@@ -195,11 +180,11 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
 
   const contextStatus = useMemo(
     () =>
-      deriveContextStatus(
-        state.conversation.usage.totalInputTokens,
-        state.conversation.usage.totalOutputTokens,
-        activeModel.contextWindow,
-      ),
+      calculateContextStatus({
+        totalInputTokens: state.conversation.usage.totalInputTokens,
+        totalOutputTokens: state.conversation.usage.totalOutputTokens,
+        maxContext: activeModel.contextWindow,
+      }),
     [
       state.conversation.usage.totalInputTokens,
       state.conversation.usage.totalOutputTokens,
@@ -210,7 +195,7 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
   const canSendMessage = useCallback(
     (estimatedTokens: number): boolean => {
       const projected = contextStatus.used + estimatedTokens;
-      return (projected / activeModel.contextWindow) < 0.95;
+      return (projected / activeModel.contextWindow) < CONTEXT_THRESHOLD_BLOCK / 100;
     },
     [contextStatus.used, activeModel.contextWindow],
   );

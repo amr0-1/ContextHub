@@ -86,3 +86,11 @@
   background: linear-gradient(90deg, var(--red), var(--red-bright));
   box-shadow: 0 0 8px color-mix(in srgb, var(--red) 40%, transparent);
 }
+
+.block {
+  color: var(--red);
+}
+.barFill.block {
+  background: linear-gradient(90deg, var(--red), var(--red-bright));
+  box-shadow: 0 0 14px color-mix(in srgb, var(--red) 60%, transparent);
+}

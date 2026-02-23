@@ -1,6 +1,6 @@
 import { ConversationProvider } from './context/ConversationContext';
 import Sidebar from './components/Sidebar/Sidebar';
-import ContextMeter from './components/ContextMeter/ContextMeter';
+import ContextDashboard from './components/ContextDashboard/ContextDashboard';
 import MessageList from './components/Chat/MessageList';
 import MessageInput from './components/Chat/MessageInput';
 import { useChat } from './hooks/useChat';
@@ -11,7 +11,7 @@ function ChatArea() {
 
   return (
     <main className={styles.main}>
-      <ContextMeter />
+      <ContextDashboard />
       <MessageList messages={messages} isLoading={isLoading} />
       <MessageInput onSend={sendMessage} disabled={isLoading} />
     </main>

@@ -1,0 +1,311 @@
+/* ═══════════════════════════════════════════════════════════════════
+   ContextDashboard — Phase 6 UI
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Container ─────────────────────────────────────── */
+.dashboard {
+  background: var(--surface-elevated);
+  border-bottom: 1px solid var(--border);
+  user-select: none;
+}
+
+/* ── Header row ────────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.625rem 1.25rem;
+  min-height: 3rem;
+}
+
+.modelBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  flex-shrink: 0;
+}
+
+.modelDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--accent) 50%, transparent);
+}
+
+.modelName {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.providerTag {
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  color: var(--accent-hover);
+  white-space: nowrap;
+}
+
+/* ── Stats row ─────────────────────────────────────── */
+.stats {
+  display: flex;
+  gap: 1.25rem;
+  margin-left: auto;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+}
+
+.statLabel {
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+}
+
+.statValue {
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+/* ── Progress bar ──────────────────────────────────── */
+.barSection {
+  padding: 0 1.25rem 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.barTrack {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--surface-inset);
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  border-radius: 3px;
+  transition:
+    width 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.4s ease;
+}
+
+.percentBadge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  min-width: 3rem;
+  text-align: right;
+}
+
+/* ── Severity colours ──────────────────────────────── */
+.safe { color: var(--green); }
+.barFill.safe {
+  background: linear-gradient(90deg, var(--green), var(--green-bright));
+  box-shadow: 0 0 8px color-mix(in srgb, var(--green) 40%, transparent);
+}
+
+.caution { color: var(--amber); }
+.barFill.caution {
+  background: linear-gradient(90deg, var(--amber), var(--amber-bright));
+  box-shadow: 0 0 8px color-mix(in srgb, var(--amber) 40%, transparent);
+}
+
+.critical { color: var(--red); }
+.barFill.critical {
+  background: linear-gradient(90deg, var(--red), var(--red-bright));
+  box-shadow: 0 0 8px color-mix(in srgb, var(--red) 40%, transparent);
+}
+
+.block { color: var(--red); }
+.barFill.block {
+  background: linear-gradient(90deg, var(--red), var(--red-bright));
+  box-shadow: 0 0 14px color-mix(in srgb, var(--red) 60%, transparent);
+}
+
+/* ── Level badge ───────────────────────────────────── */
+.levelBadge {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.levelBadge.safe {
+  background: color-mix(in srgb, var(--green) 15%, transparent);
+  color: var(--green-bright);
+}
+.levelBadge.caution {
+  background: color-mix(in srgb, var(--amber) 15%, transparent);
+  color: var(--amber-bright);
+}
+.levelBadge.critical {
+  background: color-mix(in srgb, var(--red) 15%, transparent);
+  color: var(--red-bright);
+}
+.levelBadge.block {
+  background: color-mix(in srgb, var(--red) 20%, transparent);
+  color: var(--red-bright);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.6; }
+}
+
+/* ── Toggle button ─────────────────────────────────── */
+.toggleBtn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  color: var(--text-tertiary);
+  font-size: 0.65rem;
+  padding: 0.2rem 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  white-space: nowrap;
+}
+.toggleBtn:hover {
+  background: var(--surface-inset);
+  color: var(--text-secondary);
+}
+
+/* ── Detail panel (accordion) ──────────────────────── */
+.detailPanel {
+  border-top: 1px solid var(--border-subtle);
+  max-height: 12rem;
+  overflow-y: auto;
+}
+
+.detailHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+}
+
+.detailHeader span:last-child {
+  margin-left: auto;
+}
+
+/* ── Message rows ──────────────────────────────────── */
+.msgRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 1.25rem;
+  font-size: 0.75rem;
+  transition: background 0.15s ease;
+}
+.msgRow:hover {
+  background: color-mix(in srgb, var(--surface-inset) 60%, transparent);
+}
+
+.msgIndex {
+  width: 1.5rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  font-size: 0.65rem;
+}
+
+.msgRole {
+  font-weight: 600;
+  font-size: 0.7rem;
+  text-transform: capitalize;
+  width: 4.5rem;
+  flex-shrink: 0;
+}
+.msgRole.user {
+  color: var(--accent-hover);
+}
+.msgRole.assistant {
+  color: var(--green);
+}
+.msgRole.system {
+  color: var(--amber);
+}
+
+.msgPreview {
+  flex: 1;
+  min-width: 0;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.7rem;
+}
+
+.msgTokens {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+  min-width: 3rem;
+  text-align: right;
+}
+
+.msgBar {
+  width: 4rem;
+  height: 3px;
+  border-radius: 1.5px;
+  background: var(--surface-inset);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.msgBarFill {
+  height: 100%;
+  border-radius: 1.5px;
+  background: var(--accent);
+  transition: width 0.4s ease;
+}
+
+.emptyDetail {
+  padding: 1rem 1.25rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  opacity: 0.7;
+}
+
+/* ── Cost stat ─────────────────────────────────────── */
+.costValue {
+  color: var(--amber);
+}
+
+/* ── Detail panel footer ───────────────────────────── */
+.detailFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 0.375rem 1.25rem;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 0.65rem;
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
